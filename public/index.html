@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <!-- 重要-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<link rel="stylesheet" href="./stylesheets/style.css"/>
+<script src="./javascripts/jquery-3.1.1.js"></script>
+<body>
+<header>
+    <div class="wrap">
+        <a class="logo"></a>
+        <a class="login"></a>
+        <a class="search"></a>
+        <a class="jia"></a>
+    </div>
+    <div class="nav">
+        <nav>
+            <ul>
+                <li><a class="on">推荐</a></li>
+                <li><a>百家</a></li>
+                <li><a>本地</a></li>
+                <li><a>图片</a></li>
+                <li><a>娱乐</a></li>
+                <li><a>社会</a></li>
+            </ul>
+            <ul class="navTwo">
+                <li><a>军事</a></li>
+                <li><a>互联网</a></li>
+                <li><a>科技</a></li>
+                <li><a>女人</a></li>
+                <li><a>更多</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+<article>
+<div id="news-content">
+
+</div>
+</article>
+<script>
+    $(document).ready(function() {
+        function ellipsis(str){
+            if(str.length>50){
+                var strNew=str.substr(0,50);
+                return strNew+'...';
+            }else{
+                return str;
+            }
+        }
+        $(document).scrollTop();
+        // 页面一加载，自动向服务器发送请求，查询 ‘推荐’ 类 新闻数据
+        $.ajax({
+            url: '/selectClass',
+            type: 'post',
+            data: {nclass:'推荐'},
+            success: function(rows){
+                $('news-content').empty();
+                for(var i=0; i<rows.length; i++){
+                    var imgStr = rows[i].nimg; // 获取图片地址
+                    var imgArr = []; // 定义一数组
+                    var ul = $('<ul></ul>');
+                    var li = $('<li></li>').addClass('li');
+                    var imgD=$('<div></div>');
+                    if(imgStr==''){
+                        $('<h4>').text(rows[i].ntitle).appendTo(li);
+                        $('<p>').text(ellipsis(rows[i].ncontent)).appendTo(li);
+                        li.appendTo(ul);
+                        ul.appendTo($('#news-content'));
+                    }else if(imgStr!=''&& imgStr.indexOf(',')==-1){
+                        $('<img src="'+rows[i].nimg+'"/>').appendTo(imgD);
+                        imgD.addClass('left-flex').appendTo(li);
+                        $('<h4></h4>').text(rows[i].ntitle).addClass('h4').appendTo(li);
+                        li.addClass('li-flex').appendTo(ul);
+                        ul.appendTo($('#news-content'));
+                    } else{
+                        imgArr = imgStr.split(','); // 当有多张图片时，把图片地址分割成数组
+                        if(imgArr.length<3){
+                            $('<img src="'+imgArr[0]+'">').appendTo(imgD);
+                            imgD.addClass('left-flex').appendTo(li);
+                            $('<h4></h4>').text(rows[i].ntitle).addClass('h4').appendTo(li);
+                            li.addClass('li-flex').appendTo(ul);
+                            ul.appendTo($('#news-content'));
+                        }else{
+                            $('<h4></h4>').text(rows[i].ntitle).addClass('h4').appendTo(li);
+                            $('<img src="'+imgArr[0]+'">').appendTo(imgD).addClass('img-box');
+                            $('<img src="'+imgArr[1]+'">').appendTo(imgD).addClass('img-box');
+                            $('<img src="'+imgArr[2]+'">').appendTo(imgD).addClass('img-box');
+                            imgD.addClass('threeImg').appendTo(li);
+                            li.appendTo(ul);
+                            ul.appendTo($('#news-content'));
+                        }
+                    }
+                }
+            },
+            error: function(err){
+                console.log('获取不到数据，看看是不是哪儿出错了！');
+            }
+        });
+        $('.nav').on('click', 'li', clickType);
+        function clickType(event){
+            event.preventDefault(); //
+            $('nav li').find('a').removeClass('on');
+            $(this).find('a').addClass('on');
+            var nclass = $(this).text();
+            $.ajax({
+                url: '/selectLi',
+                type: 'post',
+                data: {
+                    nclass:nclass
+                },
+                success: function(rows){
+                    $('#news-content').empty();
+                    for(var i=0; i<rows.length; i++){
+                        var imgStr = rows[i].nimg; // 获取图片地址
+                        var imgArr = []; // 定义一数组
+                        var ul = $('<ul></ul>');
+                        var li = $('<li></li>').addClass('li');
+                        var imgD=$('<div></div>');
+                        if(imgStr==''){
+                            $('<h4>').text(rows[i].ntitle).appendTo(li);
+                            $('<p>').text(ellipsis(rows[i].ncontent)).appendTo(li);
+                            li.appendTo(ul);
+                            ul.appendTo($('#news-content'));
+                        }else if(imgStr!=''&& imgStr.indexOf(',')==-1){
+                            $('<img src="'+rows[i].nimg+'"/>').appendTo(imgD);
+                            imgD.addClass('left-flex').appendTo(li);
+                            $('<h4></h4>').text(rows[i].ntitle).addClass('h4').appendTo(li);
+                            li.addClass('li-flex').appendTo(ul);
+                            ul.appendTo($('#news-content'));
+                        } else{
+                            imgArr = imgStr.split(','); // 当有多张图片时，把图片地址分割成数组
+                            if(imgArr.length<3){
+                                $('<img src="'+imgArr[0]+'">').appendTo(imgD);
+                                imgD.addClass('left-flex').appendTo(li);
+                                $('<h4></h4>').text(rows[i].ntitle).addClass('h4').appendTo(li);
+                                li.addClass('li-flex').appendTo(ul);
+                                ul.appendTo($('#news-content'));
+                            }else{
+                                $('<h4></h4>').text(rows[i].ntitle).addClass('h4').appendTo(li);
+                                $('<img src="'+imgArr[0]+'">').appendTo(imgD).addClass('img-box');
+                                $('<img src="'+imgArr[1]+'">').appendTo(imgD).addClass('img-box');
+                                $('<img src="'+imgArr[2]+'">').appendTo(imgD).addClass('img-box');
+                                imgD.addClass('threeImg').appendTo(li);
+                                li.appendTo(ul);
+                                ul.appendTo($('#news-content'));
+                            }
+                        }
+                    }
+                },
+                error: function(err){
+                    console.log('获取不到数据，看看是不是哪儿出错了！');
+                }
+            });
+        }
+
+    });
+</script>
+</body>
+</html>

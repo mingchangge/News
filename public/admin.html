@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link type="text/css" href="http://localhost:3000/stylesheets/css/jquery-ui-1.8.17.custom.css" rel="stylesheet" />
+    <link type="text/css" href="http://localhost:3000/stylesheets/css/jquery-ui-timepicker-addon.css" rel="stylesheet" />
+    <link rel="stylesheet" href="http://localhost:3000/bootstrap-3.3.7-dist/css/bootstrap.min.css"/>
+    <!--<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"/>-->
+<style>
+    .newsId{
+        display: none;
+    }
+</style>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">
+                    <span>百度新闻管理后台</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+</header>
+<article>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">新闻发布器</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="ntitle">新闻标题</label>
+                                <input type="text" class="form-control" id="ntitle" placeholder="请输入新闻标题">
+                            </div>
+                            <div class="form-group">
+                                <label for="ncontent">新闻正文</label>
+                                <textarea class="form-control" rows="3" id="ncontent"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="nimg">新闻图片地址</label>
+                                <input type="text" class="form-control" id="nimg" placeholder="请输入新闻图片网址">
+                            </div>
+                            <div class="form-group">
+                                <label for="nsrc">新闻来源</label>
+                                <input type="text" class="form-control" id="nsrc" placeholder="请输入新闻来源">
+                            </div>
+                            <div class="form-group">
+                                <label for="ndate">新闻日期</label>
+                                <input type="text" class="ui_timepicker form-control" id="ndate">
+                            </div>
+                            <div class="form-group">
+                                <label for="nclass">新闻标签</label>
+                                <select class="form-control" id="nclass">
+                                    <option>推荐</option>
+                                    <option>百家</option>
+                                    <option>本地</option>
+                                    <option>图片</option>
+                                    <option>娱乐</option>
+                                    <option>社会</option>
+                                    <option>军事</option>
+                                    <option>互联网</option>
+                                    <option>科技</option>
+                                    <option>女人</option>
+                                    <option>生活</option>
+                                    <option>国际</option>
+                                    <option>国内</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-default" id="submit">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">新闻列表</h3>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-bordered table-stripe" id="table">
+                            <tr class="t-title">
+                                <td class="newsId"><b>新闻id</b></td>
+                                <td><b>新闻标题</b></td>
+                                <td><b>新闻标签</b></td>
+                                <td><b>发布时间</b></td>
+                                <td><b>操作</b></td>
+                            </tr>
+                        </table>
+                         <!-- 分页-->
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination">
+                                <li id="pre">
+                                    <a href="#" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                            <ul class="pagination" id="page">
+
+                            </ul>
+                            <ul class="pagination">
+                                <li id="next">
+                                    <a href="#" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+<!-- Modal 更新-->
+<div class="modal fade" id="update" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">修改</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="ntitle">新闻标题</label>
+                    <input type="text" class="form-control" id="up_ntitle" placeholder="请输入新闻标题">
+                </div>
+                <div class="form-group">
+                    <label for="ncontent">新闻正文</label>
+                    <textarea class="form-control" rows="3" id="up_ncontent"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="nimg">新闻图片地址</label>
+                    <input type="text" class="form-control" id="up_nimg" placeholder="请输入新闻图片网址">
+                </div>
+                <div class="form-group">
+                    <label for="nsrc">新闻来源</label>
+                    <input type="text" class="form-control" id="up_nsrc" placeholder="请输入新闻来源">
+                </div>
+                <div class="form-group">
+                    <label for="ndate">新闻日期</label>
+                    <input type="text" class="ui_timepicker form-control" id="up_ndate">
+                </div>
+                <div class="form-group">
+                    <label for="nclass">新闻标签</label>
+                    <select class="form-control" id="up_nclass">
+                        <option>推荐</option>
+                        <option>百家</option>
+                        <option>财经</option>
+                        <option>本地</option>
+                        <option>图片</option>
+                        <option>娱乐</option>
+                        <option>社会</option>
+                        <option>军事</option>
+                        <option>互联网</option>
+                        <option>科技</option>
+                        <option>女人</option>
+                        <option>生活</option>
+                        <option>国际</option>
+                        <option>国内</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary updateNews" data-dismiss="modal" id="upm">更新</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal 删除-->
+<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="mydelete">确认删除？！</h4>
+            </div>
+            <div class="modal-body">
+                删除的数据不可以恢复哦！！！
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary deleteNews" data-dismiss="modal" id="delm">删除</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="http://localhost:3000/javascripts/jquery-3.1.1.js"></script>
+<script src="./bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+<!--<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>-->
+<script src="http://localhost:3000/javascripts/js/jquery-1.7.1.min.js"></script>
+<script src="http://localhost:3000/javascripts/js/jquery-ui-1.8.17.custom.min.js"></script>
+<script src="http://localhost:3000/javascripts/js/jquery-ui-timepicker-addon.js"></script>
+<script src="http://localhost:3000/javascripts/js/jquery-ui-timepicker-zh-CN.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.js"></script>
+<script>
+//    时间插件
+    $(".ui_timepicker").datetimepicker({
+        showSecond: true,
+        timeFormat: 'hh:mm:ss',
+        stepHour: 1,
+        stepMinute: 1,
+        stepSecond: 1
+    });
+//省略号 表格新闻标题长度大于15个字符后面省略加省略号
+function ellipsis(str){
+    if(str.length>15){
+        var strNew=str.substr(0,15);
+        return strNew+'...';
+    }else{
+        return str;
+    }
+}
+//    提交按钮，插入数据
+    $("#submit").click(function(){
+        var title=$('#ntitle').val();
+        var content=$('#ncontent').val();
+        var img=$('#nimg').val();
+        var src=$('#nsrc').val();
+        var date=$('#ndate').val();
+        var nclass=$('#nclass').val();
+        $.ajax({
+            url:'admin/insert',
+            type:'post',
+            data:{
+                ntitle:title,
+                ncontent:content,
+                nimg:img,
+                nsrc:src,
+                ndate:date,
+                nclass:nclass
+            },
+            success:function(data){
+                goPage();
+            },
+            error:function(err){
+                throw err;
+            }
+        });
+    });
+//    查询
+    $.ajax({
+        url:'admin/select',
+        type:'get',
+        success:function(rows){
+                for(var i=0;i<rows.length;i++){
+                    var tr = $('<tr></tr>').addClass('tr');
+                    var date=moment(rows[i].ndate).format('YYYY-MM-DD HH:mm:ss'); //转化日期格式 ，引入moment块暂时没用上
+                    $('<td></td>').text(rows[i].nid).appendTo(tr).css('display','none');
+                    $('<td></td>').text(ellipsis(rows[i].ntitle)).appendTo(tr);
+                    $('<td></td>').text(rows[i].nclass).appendTo(tr);
+                    $('<td></td>').text(date).appendTo(tr);
+                    var td = $('<td></td>').addClass('btns');
+                    $('<button>').addClass('btn btn-primary btn-sm upd')
+                            .text('修改').appendTo(td).attr({'data-toggle':'modal','data-target':'#update'});
+                    $('<button>').addClass('btn btn-danger btn-sm del')
+                            .text('删除').appendTo(td).css({'marginLeft':'5px'})
+                            .attr({'data-toggle':'modal','data-target':'#delete'});
+                    td.appendTo(tr);
+                    tr.appendTo($('#table'));
+                }
+        },
+        error:function(err){
+            throw err;
+        }
+    });
+//删除
+    $('#table').on('click',".del",delBtn);
+    function delBtn(nid){
+//       trs=$(this).parent().parent();
+         nid=$(this).parent().prevAll().eq(3).text();
+        //data 赋值给模态框的删除按钮
+        $('#delm').data("id",nid);
+        }
+$('#delm').click(function(){
+    var qid=$('#delm').data("id");
+    $.ajax({
+        url:'admin/del',
+        type:'post',
+        data:{nid:qid},
+        success:function(){
+            goPage();
+        },
+        err:function(){
+            if(err){
+                throw err;
+            }
+        }
+    });
+});
+
+//更新数据
+//将数据查询放在模态框上
+    $('#table').on('click',".upd",updBtn);
+    function updBtn(nid){
+        nid=$(this).parent().prevAll().eq(3).text();
+        //data 赋值给模态框的更新按钮
+        $('#upm').data("id",nid);
+        $.ajax({
+            url:'admin/selectById',
+            type:'post',
+            data:{nid:nid},
+            success:function(row){
+                $('#up_ntitle').val(row[0].ntitle);
+                $('#up_ncontent').val(row[0].ncontent);
+                $('#up_nimg').val(row[0].nimg);
+                $('#up_nsrc').val(row[0].nsrc);
+                $('#up_ndate').val(moment(row[0].ndate).format('YYYY-MM-DD HH:mm:ss'));
+                $('#up_nclass').val(row[0].nclass);
+            },
+            error:function(err){
+                throw err
+            }
+        });
+    }
+//点击按钮，更新相应数据
+$('.updateNews').click(function(){
+    var up_title=$('#up_ntitle').val();
+    var up_content=$('#up_ncontent').val();
+    var up_img=$('#up_nimg').val();
+    var up_src=$('#up_nsrc').val();
+    var up_date=$('#up_ndate').val();
+    var up_nclass=$('#up_nclass').val();
+    var qid=$('#upm').data("id");
+    $.ajax({
+        url:'admin/update',
+        type:'post',
+        data:{
+            utitle:up_title,
+            ucontent:up_content,
+            uimg:up_img,
+            usrc:up_src,
+            udate:up_date,
+            unclass:up_nclass,
+            nid:qid
+        },
+        success:function(){
+            goPage();
+        },
+        err:function(err){
+            if(err){
+                throw err;
+            }
+        }
+    });
+});
+
+//**********************************************************************************************
+//*********************************************************************分页
+var totalSlip, //总条数
+        currentSlip= 8, //每个页面显示几条
+        currentPage= 1,
+        pageTotal;
+
+//    ***********************查询数据库数据一共有多少条
+$.ajax({
+    url:'admin/fenye',
+    type:'post',
+    success:function(rows){
+        totalSlip=rows[0].RecordC;
+        fenye();
+    },
+    error:function(){
+        if(err){
+            throw err;
+        }
+    }
+});
+//**********************************************点击标签跳到相应页面
+function fenye(){
+    pageTotal = Math.ceil(totalSlip/currentSlip);
+    for(var i=1;i<=pageTotal;i++){
+        var li=$('<li>').appendTo($('#page'));
+        $('<a>'+i+'</a>').appendTo($(li));    //动态生成li标签
+        $('#page li').eq(0).addClass('active');
+    }
+}
+$('#page').on('click', 'li', getLiPage);  //点击li标签事件
+function getLiPage(){
+    $(this).addClass('active').siblings().removeClass('active');
+    currentPage = parseInt($(this).text()); //获取当前页码
+    goPage();
+}
+function goPage(){
+    var maxId=parseInt(currentPage*currentSlip);
+    var minId;
+    if(currentPage==1){
+        minId=0;
+    }else{
+        minId = parseInt((currentPage-1)*currentSlip);
+    }
+    $.ajax({
+        url:'admin/clickPage',
+        type:'post',
+        data:{
+            minId:minId,
+            maxId:maxId
+        },
+        success:function(rows){
+            $('#table tr').eq(0).nextAll().empty();
+            for(var i=0;i<rows.length;i++){
+                var tr = $('<tr></tr>');
+                var date=moment(rows[i].ndate).format('YYYY-MM-DD HH:mm:ss'); //转化日期格式 ，引入moment块暂时没用上
+                $('<td></td>').text(rows[i].nid).appendTo(tr).css('display','none');
+                $('<td></td>').text(ellipsis(rows[i].ntitle)).appendTo(tr);
+                $('<td></td>').text(rows[i].nclass).appendTo(tr);
+                $('<td></td>').text(date).appendTo(tr);
+                var td = $('<td></td>').addClass('btns');
+                $('<button>').addClass('btn btn-primary btn-sm upd')
+                        .text('修改').appendTo(td).attr({'data-toggle':'modal','data-target':'#update'});
+                $('<button>').addClass('btn btn-danger btn-sm del')
+                        .text('删除').appendTo(td).css({'marginLeft':'5px'})
+                        .attr({'data-toggle':'modal','data-target':'#delete'});
+                td.appendTo(tr);
+                tr.appendTo($('#table'));
+            }
+        },
+        error:function(err){
+            if(err){
+                throw err;
+            }
+        }
+    });
+}
+//    *************************************************************默认显示第一页
+$.ajax({
+    url:'admin/current',
+    type:'get',
+    cache: false,
+    success:function(rows){
+        $('#table tr').eq(0).nextAll().empty();
+        for(var i=0;i<rows.length;i++){
+            var tr = $('<tr></tr>');
+            var date=moment(rows[i].ndate).format('YYYY-MM-DD HH:mm:ss'); //转化日期格式 ，引入moment块暂时没用上
+            $('<td></td>').text(rows[i].nid).appendTo(tr).css('display','none');
+            $('<td></td>').text(ellipsis(rows[i].ntitle)).appendTo(tr);
+            $('<td></td>').text(rows[i].nclass).appendTo(tr);
+            $('<td></td>').text(date).appendTo(tr);
+            var td = $('<td></td>').addClass('btns');
+            $('<button>').addClass('btn btn-primary btn-sm upd')
+                    .text('修改').appendTo(td).attr({'data-toggle':'modal','data-target':'#update'});
+            $('<button>').addClass('btn btn-danger btn-sm del')
+                    .text('删除').appendTo(td).css({'marginLeft':'5px'})
+                    .attr({'data-toggle':'modal','data-target':'#delete'});
+            td.appendTo(tr);
+            tr.appendTo($('#table'));
+        }
+    },
+    error:function(err){
+        if(err){
+            throw err;
+        }
+    }
+});
+//    **********************************点击前一页
+$('#pre').click(function(event){
+    event.preventDefault();
+    if(currentPage == 1){
+        alert('当前为第一页');
+    }else{
+        --currentPage;
+        $("#page li").removeClass('active');
+        $("#page li").eq(currentPage-1).addClass('active');
+        goPage();
+    }
+});
+$('#next').click(function(){
+    if(currentPage == pageTotal){
+        alert('当前为最后一页');
+    }else{
+        ++currentPage;
+        $("#page li").removeClass('active');
+        $("#page li").eq(currentPage-1).addClass('active'); //根据下标给当前页添加active类
+        goPage();
+    }
+});
+//********************************************************************************************
+</script>
+</body>
+</html>
